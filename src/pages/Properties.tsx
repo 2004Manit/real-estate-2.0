@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import PropertyCard from "@/components/PropertyCard";
 import { Button } from "@/components/ui/button";
@@ -10,9 +10,200 @@ import { Search } from "lucide-react";
 import property1 from "@/assets/property-1.jpg";
 import property2 from "@/assets/property-2.jpg";
 import property3 from "@/assets/property-3.jpg";
-import heroBuilding from "@/assets/hero-building.jpg";
+import bbg from "@/assets/bbg.png";
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Home, Send,  Twitter, Youtube,Linkedin, Facebook } from "lucide-react";
 import { Link } from "react-router-dom";
+import AnimatedSearchBar from '@/components/AnimatedSearchBar';
+
+// ============ HELPER COMPONENTS ============
+
+// AnimateOnScroll Component - OUTSIDE the main component
+const AnimateOnScroll = ({ children, delay = 0, direction = 'up' }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  const directions = {
+    up: { y: 60, x: 0 },
+    down: { y: -60, x: 0 },
+    left: { x: 60, y: 0 },
+    right: { x: -60, y: 0 },
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, ...directions[direction] }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, ...directions[direction] }}
+      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+ // Hero Section Component - OUTSIDE the main component
+const HeroSection = () => {
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start']
+  });
+
+const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.5, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
+ return (
+    <>
+      {/* Hero Section with Background Image */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        {/* Parallax Background Image */}
+        <motion.div
+          className="absolute inset-0"
+          style={{ y: heroY, scale: heroScale }}
+        >
+          <img
+            src=""
+            alt="Modern Architecture Background"
+            className="w-full h-full object-cover"
+          />
+          {/* Gradient Overlays for better text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+          <motion.div
+            className="absolute inset-0 bg-gradient-overlay"
+            animate={{
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 5, repeat: Infinity }}
+          />
+        </motion.div>
+
+    {/* Animated Particles/Dots */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(100)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-primary/50 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, Math.random() * 50 - 25],
+                x: [0, Math.random() * 50 - 25],
+                opacity: [0.3, 0.8, 0.3],
+                scale: [1, 1.5, 1],
+              }}
+              transition={{
+                duration: Math.random() * 5 + 3,
+                repeat: Infinity,
+                repeatType: 'reverse',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Content with fade animation */}
+        <motion.div
+          className="relative z-10 text-center max-w-5xl mx-auto px-6"
+          style={{ opacity: heroOpacity }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1, ease: 'easeOut' }}
+          >
+            <motion.h1
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-foreground leading-tight font-serif"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Shaping Modern{' '}
+              <motion.span
+                className="block mt-2 bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
+                Spaces for Life and Legacy
+              </motion.span>
+            </motion.h1>
+          </motion.div>
+
+
+       <AnimateOnScroll delay={0.3}>
+            <motion.div
+              className="flex items-center justify-center gap-2 mb-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              <span className="text-muted-foreground text-sm md:text-base tracking-[0.3em] uppercase font-light">Architecture</span>
+              <span className="text-primary">•</span>
+              <span className="text-muted-foreground text-sm md:text-base tracking-[0.3em] uppercase font-light">Living</span>
+              <span className="text-primary">•</span>
+              <span className="text-muted-foreground text-sm md:text-base tracking-[0.3em] uppercase font-light">Simplicity</span>
+            </motion.div>
+          </AnimateOnScroll>
+
+          <AnimateOnScroll delay={0.5}>
+            <motion.p
+              className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-12 font-light"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1 }}
+            >
+              We create contemporary homes and mixed-use developments with lasting value.
+              Every space is crafted with care, designed for comfort, and built to support a
+              meaningful way of living.
+            </motion.p>
+          </AnimateOnScroll>
+
+
+{/* ADD ANIMATED SEARCH BAR HERE */}
+        <AnimateOnScroll delay={0.7}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            className="mb-12"
+          >
+            <AnimatedSearchBar />
+          </motion.div>
+        </AnimateOnScroll>
+
+
+           {/* Scroll Indicator */}
+          <motion.div
+            className="mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1.5 }}
+          >
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-block"
+            >
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" className="text-primary">
+                <path d="M12 5v14M19 12l-7 7-7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom Fade Edge */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      </section>
+    </>
+  );
+};   
+
+
+
+// ============ MAIN PROPERTIES COMPONENT ============
 
 const Properties = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -120,78 +311,19 @@ const Properties = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      
-      {/* Hero Section with Background Image */}
-      <div className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img 
-            src={heroBuilding} 
-            alt="Properties" 
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background"></div>
-        
-        <div className="container mx-auto px-4 relative z-10 pt-20">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-              Find Your Dream Property
-            </h1>
-            <p className="text-muted-foreground text-lg md:text-xl animate-fade-in stagger-1">
-              Welcome to Estatein, where your property search is easy and fun. Explore our curated selection of properties, each offering a unique story.
-            </p>
-          </div>
-        </div>
-      </div>
-      
-      <div className="py-20">
-        <div className="container mx-auto px-4">
 
-          {/* Filters */}
-          <div className="bg-gradient-card border border-border rounded-2xl p-6 mb-12 shadow-card">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="relative md:col-span-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  placeholder="Search by location or property name..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 bg-background border-border"
-                />
-              </div>
-              
-              <Select value={propertyType} onValueChange={setPropertyType}>
-                <SelectTrigger className="bg-background border-border">
-                  <SelectValue placeholder="Property Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="villa">Villa</SelectItem>
-                  <SelectItem value="apartment">Apartment</SelectItem>
-                  <SelectItem value="penthouse">Penthouse</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select value={priceRange} onValueChange={setPriceRange}>
-                <SelectTrigger className="bg-background border-border">
-                  <SelectValue placeholder="Price Range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Prices</SelectItem>
-                  <SelectItem value="0-500000">$0 - $500k</SelectItem>
-                  <SelectItem value="500000-1000000">$500k - $1M</SelectItem>
-                  <SelectItem value="1000000-2000000">$1M - $2M</SelectItem>
-                  <SelectItem value="2000000+">$2M+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="mt-4 flex justify-end">
-              <Button variant="hero">Apply Filters</Button>
-            </div>
-          </div>
+
+    {/* HERO SECTION */}
+      <HeroSection />
+
+      
+      
+      
 
           {/* Properties Grid */}
+
+           <div className="py-20">
+        <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {properties.map((property) => (
               <PropertyCard key={property.id} {...property} />
