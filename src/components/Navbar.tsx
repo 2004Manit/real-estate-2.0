@@ -12,7 +12,7 @@ const Navbar = () => {
               <Building2 className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-              Estatein
+              HousingDTU
             </span>
           </Link>
 

@@ -15,6 +15,45 @@ import homePageBackground from "@/assets/home page background.avif";
 
 import AnimatedDeviceSection from "@/components/AnimatedDeviceSection";  // latest update
 
+// Add animation styles
+const animationStyles = `
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .word-animate {
+    display: inline-block;
+    animation: slideInUp 0.6s ease-out forwards;
+    margin-right: 0.3em;
+  }
+  
+  .word-animate:nth-child(1) { animation-delay: 0.1s; }
+  .word-animate:nth-child(2) { animation-delay: 0.2s; }
+  .word-animate:nth-child(3) { animation-delay: 0.3s; }
+  .word-animate:nth-child(4) { animation-delay: 0.4s; }
+  .word-animate:nth-child(5) { animation-delay: 0.5s; }
+  .word-animate:nth-child(6) { animation-delay: 0.6s; }
+  .word-animate:nth-child(7) { animation-delay: 0.7s; }
+`;
+
 const Index = () => {
   const stats = [
     { value: "200+", label: "Happy Customers" },
@@ -83,6 +122,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <style>{animationStyles}</style>
       <Navbar />
       
       {/* Hero Section */}
@@ -102,12 +142,14 @@ const Index = () => {
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in-up">
-              Discover Your Dream{" "}
-              <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-                Property
-              </span>{" "}
-              with Estatein
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              <span className="word-animate">Discover</span>
+              <span className="word-animate">Your</span>
+              <span className="word-animate">Dream</span>
+              <br />
+              <span className="word-animate"><span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">Property</span></span>
+              <span className="word-animate">with</span>
+              <span className="word-animate">HousingDTU</span>
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl animate-fade-in-up stagger-1">
               Your journey to finding the perfect property begins here. Explore our curated listings to find the home that matches your dreams.
